@@ -39,6 +39,10 @@ function getInitialDeck() {
         ...Array(2).fill(cards[6]), // Healing Potion x2
         ...Array(2).fill(cards[7]), // Power Buff x2
         ...Array(1).fill(cards[8]), // Fireball x1
+        ...Array(1).fill(cards[13]), // OttoS x1
+        ...Array(2).fill(cards[6]), // Healing Potion x2
+        ...Array(2).fill(cards[7]), // Power Buff x2
+        ...Array(1).fill(cards[8]), // Fireball x1
         ...Array(4).fill(cards[9]), // Power Down x4 (Increased)
         ...Array(2).fill(cards[10]), // MP Potion x2
         ...Array(1).fill(cards[11]), // Extra Draw x1 (Rare)

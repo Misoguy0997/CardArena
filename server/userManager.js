@@ -42,13 +42,14 @@ class UserManager {
             }
 
             // Update active sockets
-            this.activeSockets[socketId] = { username: user.username, nickname: user.nickname };
+            const nickname = user.nickname || user.username;
+            this.activeSockets[socketId] = { username: user.username, nickname };
 
             return {
                 success: true,
                 user: {
                     username: user.username,
-                    nickname: user.nickname,
+                    nickname: nickname,
                     wins: user.wins,
                     losses: user.losses
                 }

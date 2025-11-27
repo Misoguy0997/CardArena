@@ -275,6 +275,24 @@ class GameState {
         return { success: true };
     }
 
+    surrender(playerId) {
+        if (this.currentPlayer !== playerId) {
+            // Optional: Allow surrender even if not turn? User said "when it's their turn".
+            // But usually surrender is allowed anytime.
+            // User request: "자신의 턴일 때 언제든 항복할 수 있는 버튼" (Button that allows surrender anytime *when it's their turn*)
+            // So I will enforce turn check.
+            return { success: false, error: 'Can only surrender during your turn' };
+        }
+
+        const player = this.players[playerId];
+        player.hp = 0; // Set HP to 0 to trigger loss
+
+        const opponentId = Object.keys(this.players).find(id => id !== playerId);
+        this.addLog(`🏳️ ${playerId} surrendered!`);
+
+        return { success: true, winner: opponentId };
+    }
+
     getPlayerName(playerId) {
         return this.players[playerId]?.name || playerId;
     }

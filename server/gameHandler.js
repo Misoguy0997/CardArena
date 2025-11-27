@@ -119,6 +119,27 @@ function registerSocketEvents(socket, io) {
             socket.emit('error', { message: result.error });
         }
     });
+
+    // 항복
+    socket.on('surrender', () => {
+        const roomId = getRoomByPlayerId(socket.id);
+        if (!roomId) return;
+
+        const game = games.get(roomId);
+        const result = game.surrender(socket.id);
+
+        if (result.success) {
+            // 승리 처리
+            io.to(roomId).emit('gameOver', { winner: result.winner });
+
+            // 상태 업데이트
+            Object.keys(game.players).forEach(playerId => {
+                io.to(playerId).emit('gameStateUpdate', game.getPublicState(playerId));
+            });
+        } else {
+            socket.emit('error', { message: result.error });
+        }
+    });
 }
 
 function handleDisconnect(playerId, io) {

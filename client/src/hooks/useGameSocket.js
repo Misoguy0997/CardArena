@@ -175,6 +175,10 @@ export const useGameSocket = () => {
         setWinner(null);
     };
 
+    const surrender = () => {
+        if (socket) socket.emit('surrender');
+    };
+
     return {
         socket,
         gameState,
@@ -195,6 +199,7 @@ export const useGameSocket = () => {
         endTurn,
         nextPhase,
         returnToLobby,
-        logout
+        logout,
+        surrender
     };
 };

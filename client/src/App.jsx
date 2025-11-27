@@ -25,7 +25,8 @@ function App() {
         endTurn,
         nextPhase,
         returnToLobby,
-        logout
+        logout,
+        surrender
     } = useGameSocket();
 
     return (
@@ -50,6 +51,7 @@ function App() {
                 nextPhase={nextPhase}
                 returnToLobby={returnToLobby}
                 logout={logout}
+                surrender={surrender}
             />
         </ErrorBoundary>
     );
@@ -74,7 +76,8 @@ const AppContent = ({
     endTurn,
     nextPhase,
     returnToLobby,
-    logout
+    logout,
+    surrender
 }) => {
     // 1. Not connected or Login View
     if (!user) {
@@ -128,6 +131,7 @@ const AppContent = ({
                     onAttack={attack}
                     onEndTurn={endTurn}
                     onNextPhase={nextPhase}
+                    onSurrender={surrender}
                 />
                 {error && (
                     <div className="fixed top-4 right-4 bg-red-600 text-white px-6 py-4 rounded-lg shadow-lg animate-bounce">

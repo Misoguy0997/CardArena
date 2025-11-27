@@ -243,6 +243,30 @@ class GameState {
             return { success: false, error: 'Already attacked this turn' };
         }
 
+        // Check for Friendly Fire (Heal Ability)
+        if (attackerId === targetPlayerId) {
+            if (attackingCard.ability !== 'heal_ally') {
+                return { success: false, error: 'Cannot attack friendly units' };
+            }
+
+            if (targetSlot === null) {
+                return { success: false, error: 'Cannot heal player directly' };
+            }
+
+            const targetCard = attacker.field[targetSlot];
+            if (!targetCard) {
+                return { success: false, error: 'No target card' };
+            }
+
+            // Heal Logic
+            targetCard.currentHp = Math.min(targetCard.currentHp + 3, targetCard.hp);
+            this.addLog(`${attackerId}'s ${attackingCard.name} healed ${targetCard.name} for 3 HP`);
+
+            // Count as attack
+            attacker.attackedThisTurn.push(attackerSlot);
+            return { success: true };
+        }
+
         if (targetSlot !== null) {
             // 캐릭터 공격
             const targetCard = target.field[targetSlot];

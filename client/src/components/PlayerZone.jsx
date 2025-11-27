@@ -109,7 +109,23 @@ export const PlayerZone = ({
                         key={idx}
                         card={card}
                         index={idx}
-                        onClick={selectedCard ? handleSlotClick : () => handleAttackerSelect(idx)}
+                        onClick={() => {
+                            if (selectedCard) {
+                                handleSlotClick(idx);
+                            } else if (attackMode && selectedAttacker !== null) {
+                                const attacker = player.field[selectedAttacker];
+                                // If attacker is OttoS (heal_ally) and clicking different friendly unit
+                                if (attacker?.ability === 'heal_ally' && selectedAttacker !== idx && card) {
+                                    onAttack(selectedAttacker, myId, idx);
+                                    setAttackMode(false);
+                                    setSelectedAttacker(null);
+                                } else {
+                                    handleAttackerSelect(idx);
+                                }
+                            } else {
+                                handleAttackerSelect(idx);
+                            }
+                        }}
                         onCardHover={onCardHover}
                         canAttack={isMyTurn && card && !player.attackedThisTurn.includes(idx) && card.summonedTurn !== player.turn}
                     />

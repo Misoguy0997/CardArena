@@ -73,13 +73,27 @@ class RoomManager {
         return null;
     }
 
+    deleteRoom(roomId, hostId) {
+        const room = this.rooms[roomId];
+        if (!room) {
+            return { success: false, error: 'Room not found' };
+        }
+        if (room.hostId !== hostId) {
+            return { success: false, error: 'Not authorized' };
+        }
+
+        delete this.rooms[roomId];
+        return { success: true, roomId };
+    }
+
     getRooms() {
         return Object.values(this.rooms).map(room => ({
             id: room.id,
             name: room.name,
             hasPassword: !!room.password,
             players: room.players.length,
-            status: room.status
+            status: room.status,
+            hostId: room.hostId // Expose hostId
         }));
     }
 

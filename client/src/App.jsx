@@ -26,7 +26,9 @@ function App() {
         nextPhase,
         returnToLobby,
         logout,
-        surrender
+        surrender,
+        deleteRoom,
+        myId
     } = useGameSocket();
 
     return (
@@ -52,6 +54,8 @@ function App() {
                 returnToLobby={returnToLobby}
                 logout={logout}
                 surrender={surrender}
+                deleteRoom={deleteRoom}
+                myId={myId}
             />
         </ErrorBoundary>
     );
@@ -77,7 +81,9 @@ const AppContent = ({
     nextPhase,
     returnToLobby,
     logout,
-    surrender
+    surrender,
+    deleteRoom,
+    myId
 }) => {
     // 1. Not connected or Login View
     if (!user) {
@@ -153,6 +159,8 @@ const AppContent = ({
                 onJoinRoom={joinRoom}
                 onQuickMatch={quickMatch}
                 onLogout={logout}
+                onDeleteRoom={deleteRoom}
+                myId={myId}
             />
 
             {isWaiting && (

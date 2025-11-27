@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 
-export const Lobby = ({ user, rooms, onlineUsers, onCreateRoom, onJoinRoom, onQuickMatch, onLogout }) => {
+export const Lobby = ({ user, rooms, onlineUsers, onCreateRoom, onJoinRoom, onQuickMatch, onLogout, onDeleteRoom, myId }) => {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [newRoomName, setNewRoomName] = useState('');
     const [newRoomPassword, setNewRoomPassword] = useState('');
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [roomToDelete, setRoomToDelete] = useState(null);
+
+    const isHosting = rooms.some(r => r.hostId === myId);
 
     const handleCreateSubmit = (e) => {
         e.preventDefault();
@@ -12,6 +17,19 @@ export const Lobby = ({ user, rooms, onlineUsers, onCreateRoom, onJoinRoom, onQu
             setShowCreateModal(false);
             setNewRoomName('');
             setNewRoomPassword('');
+        }
+    };
+
+    const handleDeleteClick = (roomId) => {
+        setRoomToDelete(roomId);
+        setShowDeleteModal(true);
+    };
+
+    const confirmDelete = () => {
+        if (roomToDelete) {
+            onDeleteRoom(roomToDelete);
+            setShowDeleteModal(false);
+            setRoomToDelete(null);
         }
     };
 
@@ -39,7 +57,12 @@ export const Lobby = ({ user, rooms, onlineUsers, onCreateRoom, onJoinRoom, onQu
                         </button>
                         <button
                             onClick={() => setShowCreateModal(true)}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transform hover:scale-105 transition-all"
+                            disabled={isHosting}
+                            className={`px-6 py-3 rounded-lg font-bold shadow-lg transform transition-all ${isHosting
+                                    ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                                    : 'bg-blue-600 hover:bg-blue-700 text-white hover:scale-105'
+                                }`}
+                            title={isHosting ? "You are already hosting a room" : "Create a new room"}
                         >
                             ➕ Create Room
                         </button>
@@ -69,6 +92,7 @@ export const Lobby = ({ user, rooms, onlineUsers, onCreateRoom, onJoinRoom, onQu
                                         <div className="flex-1 text-white font-medium flex items-center gap-2">
                                             {room.name}
                                             {room.hasPassword && <span className="text-xs bg-yellow-600 px-2 py-0.5 rounded">🔒</span>}
+                                            {room.hostId === myId && <span className="text-xs bg-blue-600 px-2 py-0.5 rounded ml-2">MY ROOM</span>}
                                         </div>
                                         <div className="w-32 text-center">
                                             <span className={`px-2 py-1 rounded text-xs font-bold ${room.status === 'waiting' ? 'bg-green-900 text-green-300' : 'bg-red-900 text-red-300'
@@ -80,23 +104,32 @@ export const Lobby = ({ user, rooms, onlineUsers, onCreateRoom, onJoinRoom, onQu
                                             {room.players}/2
                                         </div>
                                         <div className="w-32 text-center">
-                                            <button
-                                                onClick={() => {
-                                                    if (room.hasPassword) {
-                                                        const pwd = prompt('Enter room password:');
-                                                        if (pwd !== null) onJoinRoom(room.id, pwd);
-                                                    } else {
-                                                        onJoinRoom(room.id, '');
-                                                    }
-                                                }}
-                                                disabled={room.status !== 'waiting'}
-                                                className={`px-4 py-2 rounded text-sm font-bold ${room.status === 'waiting'
-                                                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                                                    : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                                                    }`}
-                                            >
-                                                Join
-                                            </button>
+                                            {room.hostId === myId ? (
+                                                <button
+                                                    onClick={() => handleDeleteClick(room.id)}
+                                                    className="px-4 py-2 rounded text-sm font-bold bg-red-600 hover:bg-red-700 text-white"
+                                                >
+                                                    Delete
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    onClick={() => {
+                                                        if (room.hasPassword) {
+                                                            const pwd = prompt('Enter room password:');
+                                                            if (pwd !== null) onJoinRoom(room.id, pwd);
+                                                        } else {
+                                                            onJoinRoom(room.id, '');
+                                                        }
+                                                    }}
+                                                    disabled={room.status !== 'waiting'}
+                                                    className={`px-4 py-2 rounded text-sm font-bold ${room.status === 'waiting'
+                                                        ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                                                        : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                                                        }`}
+                                                >
+                                                    Join
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
                                 ))
@@ -174,6 +207,32 @@ export const Lobby = ({ user, rooms, onlineUsers, onCreateRoom, onJoinRoom, onQu
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Room Confirmation Modal */}
+            {showDeleteModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+                    <div className="bg-gray-800 p-6 rounded-lg w-96 border border-red-500 shadow-2xl">
+                        <h3 className="text-xl font-bold text-white mb-4">Delete Room?</h3>
+                        <p className="text-gray-300 mb-6">
+                            Are you sure you want to delete this room? This action cannot be undone.
+                        </p>
+                        <div className="flex justify-end gap-3">
+                            <button
+                                onClick={() => setShowDeleteModal(false)}
+                                className="px-4 py-2 text-gray-300 hover:text-white"
+                            >
+                                No, Cancel
+                            </button>
+                            <button
+                                onClick={confirmDelete}
+                                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded font-bold"
+                            >
+                                Yes, Delete
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

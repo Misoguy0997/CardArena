@@ -196,6 +196,18 @@ class GameState {
                 targetCard.atk = Math.max(0, targetCard.atk - card.value);
                 this.addLog(`${playerId} reduced ${targetCard.name}'s ATK by ${card.value}`);
                 return { success: true };
+                targetCard.atk = Math.max(0, targetCard.atk - card.value);
+                this.addLog(`${playerId} reduced ${targetCard.name}'s ATK by ${card.value}`);
+                return { success: true };
+            case 'mp_restore':
+                player.mp = Math.min(player.mp + card.value, player.maxMp || 20);
+                this.addLog(`${playerId} restored ${card.value} MP`);
+                return { success: true };
+            case 'draw':
+                this.drawCards(playerId, card.value);
+                // Log is already handled in drawCards, but we can add a specific item log
+                this.addLog(`${playerId} used Extra Draw to draw ${card.value} cards`);
+                return { success: true };
             default:
                 return { success: false, error: 'Unknown effect' };
         }

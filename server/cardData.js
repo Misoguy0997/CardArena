@@ -13,7 +13,9 @@ const cards = [
     { id: 201, name: 'Healing Potion', type: 'item', cost: 2, effect: 'heal', value: 5, description: 'Restore 5 HP to your hero.', image: 'https://cdn-icons-png.flaticon.com/512/5790/5790413.png' },
     { id: 202, name: 'Power Buff', type: 'item', cost: 3, effect: 'buff', value: 2, description: 'All friendly characters gain +2 ATK.', image: 'https://cdn-icons-png.flaticon.com/512/7509/7509898.png' },
     { id: 203, name: 'Fireball', type: 'item', cost: 4, effect: 'damage', value: 5, description: 'Deal 5 damage to the opponent.', image: 'https://cdn-icons-png.flaticon.com/512/1744/1744990.png' },
-    { id: 204, name: 'Power Down', type: 'item', cost: 1, effect: 'debuff', value: 1, description: "Reduces the attack power of the designated opponent's character card by 1.", image: 'https://cdn-icons-png.flaticon.com/512/6070/6070670.png' }, // Using generic buff icon for now
+    { id: 204, name: 'Power Down', type: 'item', cost: 1, effect: 'debuff', value: 1, description: "Reduces the attack power of the designated opponent's character card by 1.", image: 'https://cdn-icons-png.flaticon.com/512/6070/6070670.png' },
+    { id: 205, name: 'MP Potion', type: 'item', cost: 0, effect: 'mp_restore', value: 2, description: 'Restore 2 MP to you.', image: 'https://cdn-icons-png.flaticon.com/512/12328/12328692.png' },
+    { id: 206, name: 'Extra Draw', type: 'item', cost: 4, effect: 'draw', value: 2, description: 'Draw 2 more cards immediately', image: 'https://cdn-icons-png.flaticon.com/512/18616/18616159.png' },
 ];
 
 function getCardById(id) {
@@ -33,6 +35,8 @@ function getInitialDeck() {
         ...Array(2).fill(cards[7]), // Power Buff x2
         ...Array(1).fill(cards[8]), // Fireball x1
         ...Array(2).fill(cards[9]), // Power Down x2
+        ...Array(2).fill(cards[10]), // MP Potion x2
+        ...Array(1).fill(cards[11]), // Extra Draw x1 (Rare)
     ].map((card, index) => ({ ...card, deckId: `${card.id}_${index}` }));
 }
 

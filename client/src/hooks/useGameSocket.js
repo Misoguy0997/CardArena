@@ -134,6 +134,10 @@ export const useGameSocket = () => {
         if (socket) socket.emit('createRoom', { name, password });
     };
 
+    const deleteRoom = (roomId) => {
+        if (socket) socket.emit('deleteRoom', roomId);
+    };
+
     const joinRoom = (roomId, password) => {
         if (socket) socket.emit('joinRoom', { roomId, password });
     };
@@ -181,6 +185,7 @@ export const useGameSocket = () => {
 
     return {
         socket,
+        myId: socket?.id,
         gameState,
         isConnected,
         isWaiting,
@@ -193,6 +198,7 @@ export const useGameSocket = () => {
         register,
         createRoom,
         joinRoom,
+        deleteRoom,
         quickMatch,
         playCard,
         attack,

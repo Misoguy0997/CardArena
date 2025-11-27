@@ -109,6 +109,20 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on('deleteRoom', (roomId) => {
+        const result = roomManager.deleteRoom(roomId, socket.id);
+        if (result.success) {
+            // Notify players in the room (if any other than host)
+            io.to(roomId).emit('roomDeleted');
+            // Leave the room
+            io.in(roomId).socketsLeave(roomId);
+
+            io.emit('roomListUpdate', roomManager.getRooms());
+        } else {
+            socket.emit('error', result.error);
+        }
+    });
+
     socket.on('joinRoom', ({ roomId, password }) => {
         const user = userManager.getUserBySocketId(socket.id);
         if (!user) return;

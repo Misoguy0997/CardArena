@@ -22,6 +22,7 @@ const PORT = process.env.PORT || 3001;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/tcg-game';
 
 console.log('Attempting to connect to MongoDB...');
+console.log('Available Env Keys:', Object.keys(process.env)); // Debug: Check if MONGO_URI exists
 // Mask the password for logging safety
 const maskedURI = MONGO_URI.replace(/:([^:@]+)@/, ':****@');
 console.log(`Connection URI: ${maskedURI}`);

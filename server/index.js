@@ -20,9 +20,19 @@ const PORT = process.env.PORT || 3001;
 
 // MongoDB Connection
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/tcg-game';
+
+console.log('Attempting to connect to MongoDB...');
+// Mask the password for logging safety
+const maskedURI = MONGO_URI.replace(/:([^:@]+)@/, ':****@');
+console.log(`Connection URI: ${maskedURI}`);
+
 mongoose.connect(MONGO_URI)
     .then(() => console.log('✅ Connected to MongoDB'))
-    .catch(err => console.error('❌ MongoDB Connection Error:', err));
+    .catch(err => {
+        console.error('❌ MongoDB Connection Error:', err);
+        console.error('Error Name:', err.name);
+        console.error('Error Message:', err.message);
+    });
 
 const userManager = require('./userManager');
 const roomManager = require('./roomManager');

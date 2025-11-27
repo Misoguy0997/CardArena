@@ -208,6 +208,19 @@ class GameState {
                 // Log is already handled in drawCards, but we can add a specific item log
                 this.addLog(`${playerId} used Extra Draw to draw ${card.value} cards`);
                 return { success: true };
+            case 'destroy':
+                if (targetSlot === null || targetSlot < 0 || targetSlot >= 5) {
+                    return { success: false, error: 'Invalid target slot' };
+                }
+                const destroyTarget = opponent.field[targetSlot];
+                if (!destroyTarget) {
+                    return { success: false, error: 'No card in target slot' };
+                }
+
+                opponent.graveyard.push(destroyTarget);
+                opponent.field[targetSlot] = null;
+                this.addLog(`${playerId} used Obliterate to destroy ${destroyTarget.name}`);
+                return { success: true };
             default:
                 return { success: false, error: 'Unknown effect' };
         }

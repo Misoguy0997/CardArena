@@ -114,8 +114,8 @@ export const PlayerZone = ({
                                 handleSlotClick(idx);
                             } else if (attackMode && selectedAttacker !== null) {
                                 const attacker = player.field[selectedAttacker];
-                                // If attacker is OttoS (heal_ally) and clicking different friendly unit
-                                if (attacker?.ability === 'heal_ally' && selectedAttacker !== idx && card) {
+                                // If attacker is OttoS (heal_ally) and clicking friendly unit (including self)
+                                if (attacker?.ability === 'heal_ally' && card) {
                                     onAttack(selectedAttacker, myId, idx);
                                     setAttackMode(false);
                                     setSelectedAttacker(null);

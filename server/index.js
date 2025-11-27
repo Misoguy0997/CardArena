@@ -19,10 +19,21 @@ const io = new Server(server, {
 const PORT = process.env.PORT || 3001;
 
 // MongoDB Connection
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/tcg-game';
+const MONGO_URI = process.env.MONGO_URI;
 
-console.log('Attempting to connect to MongoDB...');
-console.log('Available Env Keys:', Object.keys(process.env)); // Debug: Check if MONGO_URI exists
+console.log('----------------------------------------');
+console.log('Starting Server...');
+console.log('Checking Environment Variables...');
+
+if (!MONGO_URI) {
+    console.error('CRITICAL ERROR: MONGO_URI is missing!');
+    console.error('Please check Render Environment Variables.');
+    console.error('Available Keys:', Object.keys(process.env));
+    console.log('----------------------------------------');
+    process.exit(1); // Stop server if no DB
+}
+
+console.log('MONGO_URI found. Attempting connection...');
 // Mask the password for logging safety
 const maskedURI = MONGO_URI.replace(/:([^:@]+)@/, ':****@');
 console.log(`Connection URI: ${maskedURI}`);

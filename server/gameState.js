@@ -359,6 +359,14 @@ class GameState {
     }
 
     getPublicState(forPlayerId) {
+        const opponentId = Object.keys(this.players).find(id => id !== forPlayerId);
+        const opponent = this.players[opponentId];
+
+        if (!this.players[forPlayerId]) {
+            console.error(`[GameState] Error: Player ${forPlayerId} not found in room ${this.roomId}`);
+            return null;
+        }
+
         return {
             roomId: this.roomId,
             turn: this.turn,
@@ -368,11 +376,11 @@ class GameState {
             myId: forPlayerId,
             players: {
                 [forPlayerId]: this.players[forPlayerId],
-                opponent: {
-                    ...this.players[Object.keys(this.players).find(id => id !== forPlayerId)],
-                    hand: this.players[Object.keys(this.players).find(id => id !== forPlayerId)].hand.map(() => ({ hidden: true })), // 상대 핸드는 숨김
+                opponent: opponent ? {
+                    ...opponent,
+                    hand: opponent.hand.map(() => ({ hidden: true })), // 상대 핸드는 숨김
                     deck: [] // 덱도 숨김
-                }
+                } : null
             }
         };
     }

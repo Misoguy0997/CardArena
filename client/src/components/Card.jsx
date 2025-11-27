@@ -9,6 +9,7 @@ export const Card = ({ card, onClick, onHover, isDraggable = false, isHidden = f
         );
     }
 
+    if (!card) return null;
     const isCharacter = card.type === 'character';
 
     return (

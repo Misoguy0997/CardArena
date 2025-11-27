@@ -14,6 +14,7 @@ function App() {
         winner,
         user,
         rooms,
+        onlineUsers,
         login,
         register,
         createRoom,
@@ -35,6 +36,7 @@ function App() {
                 winner={winner}
                 user={user}
                 rooms={rooms}
+                onlineUsers={onlineUsers}
                 login={login}
                 register={register}
                 createRoom={createRoom}
@@ -57,6 +59,7 @@ const AppContent = ({
     winner,
     user,
     rooms,
+    onlineUsers,
     login,
     register,
     createRoom,
@@ -135,6 +138,7 @@ const AppContent = ({
             <Lobby
                 user={user}
                 rooms={rooms}
+                onlineUsers={onlineUsers}
                 onCreateRoom={createRoom}
                 onJoinRoom={joinRoom}
                 onQuickMatch={quickMatch}

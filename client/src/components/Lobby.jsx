@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export const Lobby = ({ user, rooms, onCreateRoom, onJoinRoom, onQuickMatch }) => {
+export const Lobby = ({ user, rooms, onlineUsers, onCreateRoom, onJoinRoom, onQuickMatch }) => {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [newRoomName, setNewRoomName] = useState('');
     const [newRoomPassword, setNewRoomPassword] = useState('');
@@ -40,57 +40,88 @@ export const Lobby = ({ user, rooms, onCreateRoom, onJoinRoom, onQuickMatch }) =
                     </div>
                 </div>
 
-                {/* Room List */}
-                <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden shadow-xl">
-                    <div className="p-4 bg-gray-700 border-b border-gray-600 flex font-bold text-gray-300">
-                        <div className="flex-1">Room Name</div>
-                        <div className="w-32 text-center">Status</div>
-                        <div className="w-32 text-center">Players</div>
-                        <div className="w-32 text-center">Action</div>
+                {/* Main Content Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+                    {/* Left Column: Room List (Takes up 3/4 space) */}
+                    <div className="lg:col-span-3">
+                        <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden shadow-xl">
+                            <div className="p-4 bg-gray-700 border-b border-gray-600 flex font-bold text-gray-300">
+                                <div className="flex-1">Room Name</div>
+                                <div className="w-32 text-center">Status</div>
+                                <div className="w-32 text-center">Players</div>
+                                <div className="w-32 text-center">Action</div>
+                            </div>
+
+                            {rooms.length === 0 ? (
+                                <div className="p-8 text-center text-gray-500">
+                                    No rooms available. Create one or use Quick Match!
+                                </div>
+                            ) : (
+                                rooms.map(room => (
+                                    <div key={room.id} className="p-4 border-b border-gray-700 flex items-center hover:bg-gray-750 transition-colors">
+                                        <div className="flex-1 text-white font-medium flex items-center gap-2">
+                                            {room.name}
+                                            {room.hasPassword && <span className="text-xs bg-yellow-600 px-2 py-0.5 rounded">🔒</span>}
+                                        </div>
+                                        <div className="w-32 text-center">
+                                            <span className={`px-2 py-1 rounded text-xs font-bold ${room.status === 'waiting' ? 'bg-green-900 text-green-300' : 'bg-red-900 text-red-300'
+                                                }`}>
+                                                {room.status.toUpperCase()}
+                                            </span>
+                                        </div>
+                                        <div className="w-32 text-center text-gray-300">
+                                            {room.players}/2
+                                        </div>
+                                        <div className="w-32 text-center">
+                                            <button
+                                                onClick={() => {
+                                                    if (room.hasPassword) {
+                                                        const pwd = prompt('Enter room password:');
+                                                        if (pwd !== null) onJoinRoom(room.id, pwd);
+                                                    } else {
+                                                        onJoinRoom(room.id, '');
+                                                    }
+                                                }}
+                                                disabled={room.status !== 'waiting'}
+                                                className={`px-4 py-2 rounded text-sm font-bold ${room.status === 'waiting'
+                                                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                                                    : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                                                    }`}
+                                            >
+                                                Join
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
                     </div>
 
-                    {rooms.length === 0 ? (
-                        <div className="p-8 text-center text-gray-500">
-                            No rooms available. Create one or use Quick Match!
-                        </div>
-                    ) : (
-                        rooms.map(room => (
-                            <div key={room.id} className="p-4 border-b border-gray-700 flex items-center hover:bg-gray-750 transition-colors">
-                                <div className="flex-1 text-white font-medium flex items-center gap-2">
-                                    {room.name}
-                                    {room.hasPassword && <span className="text-xs bg-yellow-600 px-2 py-0.5 rounded">🔒</span>}
-                                </div>
-                                <div className="w-32 text-center">
-                                    <span className={`px-2 py-1 rounded text-xs font-bold ${room.status === 'waiting' ? 'bg-green-900 text-green-300' : 'bg-red-900 text-red-300'
-                                        }`}>
-                                        {room.status.toUpperCase()}
-                                    </span>
-                                </div>
-                                <div className="w-32 text-center text-gray-300">
-                                    {room.players}/2
-                                </div>
-                                <div className="w-32 text-center">
-                                    <button
-                                        onClick={() => {
-                                            if (room.hasPassword) {
-                                                const pwd = prompt('Enter room password:');
-                                                if (pwd !== null) onJoinRoom(room.id, pwd);
-                                            } else {
-                                                onJoinRoom(room.id, '');
-                                            }
-                                        }}
-                                        disabled={room.status !== 'waiting'}
-                                        className={`px-4 py-2 rounded text-sm font-bold ${room.status === 'waiting'
-                                                ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                                                : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                                            }`}
-                                    >
-                                        Join
-                                    </button>
-                                </div>
+                    {/* Right Column: Online Players (Takes up 1/4 space) */}
+                    <div className="lg:col-span-1">
+                        <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden shadow-xl h-full">
+                            <div className="p-4 bg-gray-700 border-b border-gray-600 font-bold text-gray-300 flex justify-between items-center">
+                                <span>Online Players</span>
+                                <span className="bg-green-600 text-white text-xs px-2 py-1 rounded-full">{onlineUsers?.length || 0}</span>
                             </div>
-                        ))
-                    )}
+                            <div className="p-4 max-h-[500px] overflow-y-auto">
+                                {onlineUsers && onlineUsers.length > 0 ? (
+                                    <ul className="space-y-2">
+                                        {onlineUsers.map((u, idx) => (
+                                            <li key={idx} className="flex items-center gap-2 text-gray-300 bg-gray-750 p-2 rounded">
+                                                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                                <span className="font-medium truncate">{u.nickname}</span>
+                                                {u.username === user.username && <span className="text-xs text-gray-500">(You)</span>}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <div className="text-gray-500 text-sm text-center">No players online</div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

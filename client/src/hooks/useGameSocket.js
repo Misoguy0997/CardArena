@@ -14,6 +14,7 @@ export const useGameSocket = () => {
     // Auth & Lobby State
     const [user, setUser] = useState(null);
     const [rooms, setRooms] = useState([]);
+    const [onlineUsers, setOnlineUsers] = useState([]);
 
     useEffect(() => {
         const newSocket = io(SOCKET_URL);
@@ -53,6 +54,10 @@ export const useGameSocket = () => {
         // Lobby Events
         newSocket.on('roomListUpdate', (roomList) => {
             setRooms(roomList);
+        });
+
+        newSocket.on('onlineUsersUpdate', (users) => {
+            setOnlineUsers(users);
         });
 
         newSocket.on('roomCreated', (room) => {
@@ -146,6 +151,7 @@ export const useGameSocket = () => {
         winner,
         user,
         rooms,
+        onlineUsers,
         login,
         register,
         createRoom,

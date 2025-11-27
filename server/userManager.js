@@ -42,7 +42,7 @@ class UserManager {
             }
 
             // Update active sockets
-            this.activeSockets[socketId] = username;
+            this.activeSockets[socketId] = { username: user.username, nickname: user.nickname };
 
             return {
                 success: true,
@@ -60,10 +60,10 @@ class UserManager {
     }
 
     disconnect(socketId) {
-        const username = this.activeSockets[socketId];
-        if (username) {
+        const user = this.activeSockets[socketId];
+        if (user) {
             delete this.activeSockets[socketId];
-            return username;
+            return user.username;
         }
         return null;
     }
@@ -78,8 +78,22 @@ class UserManager {
     }
 
     getUserBySocketId(socketId) {
-        // This only returns the username now, fetching full object requires async call if needed
         return this.activeSockets[socketId];
+    }
+
+    getOnlineUsers() {
+        // Return unique users (in case of multiple tabs, though current logic might overwrite)
+        const users = Object.values(this.activeSockets);
+        // Deduplicate by username
+        const uniqueUsers = [];
+        const seen = new Set();
+        for (const u of users) {
+            if (!seen.has(u.username)) {
+                seen.add(u.username);
+                uniqueUsers.push(u);
+            }
+        }
+        return uniqueUsers;
     }
 }
 

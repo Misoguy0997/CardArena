@@ -70,6 +70,8 @@ io.on('connection', (socket) => {
             socket.emit('loginSuccess', result.user);
             // Send room list after login
             socket.emit('roomListUpdate', roomManager.getRooms());
+            // Broadcast online users
+            io.emit('onlineUsersUpdate', userManager.getOnlineUsers());
         } else {
             socket.emit('loginError', { message: result.error });
         }
@@ -194,6 +196,7 @@ io.on('connection', (socket) => {
 
         // Remove from auth
         userManager.disconnect(socket.id);
+        io.emit('onlineUsersUpdate', userManager.getOnlineUsers());
 
         // Remove from waiting list
         if (waitingPlayer === socket.id) {

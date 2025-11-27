@@ -71,7 +71,7 @@ export const PlayerZone = ({
     const handleUseItem = (card) => {
         if (!isMyTurn) return;
 
-        if (card.effect === 'debuff' || card.effect === 'destroy') {
+        if (card.effect === 'debuff') {
             // 타겟팅이 필요한 아이템
             setItemTargetMode(true);
             setSelectedItem(card);
@@ -137,7 +137,7 @@ export const PlayerZone = ({
                 {player.hand && player.hand.map((card) => (
                     <div
                         key={card.instanceId}
-                        className={`${selectedCard?.instanceId === card.instanceId ? 'ring-4 ring-yellow-400' : ''} ${itemTargetMode && (card.effect === 'debuff' || card.effect === 'destroy') ? 'ring-4 ring-purple-500' : ''}`}
+                        className={`${selectedCard?.instanceId === card.instanceId ? 'ring-4 ring-yellow-400' : ''} ${itemTargetMode && card.effect === 'debuff' ? 'ring-4 ring-purple-500' : ''}`}
                         onClick={() => card.type === 'character' ? handleCardClick(card) : handleUseItem(card)}
                     >
                         <Card card={card} onHover={onCardHover} isDraggable={isMyTurn} />

@@ -16,7 +16,7 @@ const cards = [
     { id: 204, name: 'Power Down', type: 'item', cost: 1, effect: 'debuff', value: 2, description: "Reduces the attack power of the designated opponent's character card by 2.", image: 'https://cdn-icons-png.flaticon.com/512/6070/6070670.png' },
     { id: 205, name: 'MP Potion', type: 'item', cost: 0, effect: 'mp_restore', value: 2, description: 'Restore 2 MP to you.', image: 'https://cdn-icons-png.flaticon.com/512/12328/12328692.png' },
     { id: 206, name: 'Extra Draw', type: 'item', cost: 4, effect: 'draw', value: 2, description: 'Draw 2 more cards immediately', image: 'https://cdn-icons-png.flaticon.com/512/8616/8616159.png' },
-    { id: 207, name: 'Obliterate', type: 'item', cost: 8, effect: 'destroy', value: 0, description: 'Destroy an opponent\'s character card.', image: 'https://cdn-icons-png.flaticon.com/512/7445/7445281.png' },
+    { id: 207, name: 'Obliterate', type: 'item', cost: 8, effect: 'destroy', value: 0, description: 'Destroy ALL opponent character cards.', image: 'https://cdn-icons-png.flaticon.com/512/7445/7445281.png' },
 
     // Special Character
     { id: 102, name: 'OttoS', type: 'character', cost: 6, atk: 3, hp: 10, description: 'This is a spirit from a rhythm game. Attacks heal friendly units for 3 HP.', ability: 'heal_ally', image: 'https://i.postimg.cc/YqtntMxB/ottospirit-tumyeong.png' },

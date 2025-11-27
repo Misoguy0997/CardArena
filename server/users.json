@@ -1,0 +1,14 @@
+{
+  "Misoguy": {
+    "password": "Starbug",
+    "nickname": "Misoguy",
+    "isOnline": true,
+    "socketId": "9bZJ9htxENpTf62cAAAD"
+  },
+  "Misoguy2": {
+    "password": "Starbug2",
+    "nickname": "Misoguy2",
+    "isOnline": false,
+    "socketId": null
+  }
+}

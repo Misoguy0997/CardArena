@@ -23,7 +23,9 @@ function App() {
         playCard,
         attack,
         endTurn,
-        nextPhase
+        nextPhase,
+        returnToLobby,
+        logout
     } = useGameSocket();
 
     return (
@@ -46,6 +48,8 @@ function App() {
                 attack={attack}
                 endTurn={endTurn}
                 nextPhase={nextPhase}
+                returnToLobby={returnToLobby}
+                logout={logout}
             />
         </ErrorBoundary>
     );
@@ -68,7 +72,9 @@ const AppContent = ({
     playCard,
     attack,
     endTurn,
-    nextPhase
+    nextPhase,
+    returnToLobby,
+    logout
 }) => {
     // 1. Not connected or Login View
     if (!user) {
@@ -104,7 +110,7 @@ const AppContent = ({
                             {isWinner ? 'Congratulations! You won the game!' : 'Better luck next time!'}
                         </p>
                         <button
-                            onClick={() => window.location.reload()}
+                            onClick={returnToLobby}
                             className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-xl"
                         >
                             Back to Lobby
@@ -142,6 +148,7 @@ const AppContent = ({
                 onCreateRoom={createRoom}
                 onJoinRoom={joinRoom}
                 onQuickMatch={quickMatch}
+                onLogout={logout}
             />
 
             {isWaiting && (

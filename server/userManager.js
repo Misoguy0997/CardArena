@@ -3,7 +3,8 @@ const bcrypt = require('bcryptjs');
 
 class UserManager {
     constructor() {
-        this.activeSockets = {}; // { socketId: username }
+        this.activeSockets = {}; // { socketId: { username, nickname } }
+        this.sessions = {}; // { token: username }
     }
 
     // No loadUsers/saveUsers needed for MongoDB
@@ -41,6 +42,42 @@ class UserManager {
                 return { success: false, error: 'Incorrect password' };
             }
 
+            // Generate simple session token
+            const token = Math.random().toString(36).substring(2) + Date.now().toString(36);
+            this.sessions[token] = username;
+
+            // Update active sockets
+            const nickname = user.nickname || user.username;
+            this.activeSockets[socketId] = { username: user.username, nickname };
+
+            return {
+                success: true,
+                token,
+                user: {
+                    username: user.username,
+                    nickname: nickname,
+                    wins: user.wins,
+                    losses: user.losses
+                }
+            };
+        } catch (error) {
+            console.error('Login error:', error);
+            return { success: false, error: 'Server error during login' };
+        }
+    }
+
+    async verifySession(token, socketId) {
+        const username = this.sessions[token];
+        if (!username) {
+            return { success: false, error: 'Invalid session' };
+        }
+
+        try {
+            const user = await User.findOne({ username });
+            if (!user) {
+                return { success: false, error: 'User not found' };
+            }
+
             // Update active sockets
             const nickname = user.nickname || user.username;
             this.activeSockets[socketId] = { username: user.username, nickname };
@@ -55,8 +92,14 @@ class UserManager {
                 }
             };
         } catch (error) {
-            console.error('Login error:', error);
-            return { success: false, error: 'Server error during login' };
+            console.error('Session verify error:', error);
+            return { success: false, error: 'Server error' };
+        }
+    }
+
+    logout(token) {
+        if (this.sessions[token]) {
+            delete this.sessions[token];
         }
     }
 

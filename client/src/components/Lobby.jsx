@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export const Lobby = ({ user, rooms, onlineUsers, onCreateRoom, onJoinRoom, onQuickMatch }) => {
+export const Lobby = ({ user, rooms, onlineUsers, onCreateRoom, onJoinRoom, onQuickMatch, onLogout }) => {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [newRoomName, setNewRoomName] = useState('');
     const [newRoomPassword, setNewRoomPassword] = useState('');
@@ -25,6 +25,12 @@ export const Lobby = ({ user, rooms, onlineUsers, onCreateRoom, onJoinRoom, onQu
                         <p className="text-gray-400">Welcome, <span className="text-blue-400 font-bold">{user.nickname}</span></p>
                     </div>
                     <div className="flex gap-4">
+                        <button
+                            onClick={onLogout}
+                            className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transform hover:scale-105 transition-all"
+                        >
+                            🚪 Logout
+                        </button>
                         <button
                             onClick={onQuickMatch}
                             className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transform hover:scale-105 transition-all"

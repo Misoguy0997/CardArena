@@ -67,13 +67,32 @@ io.on('connection', (socket) => {
         const { username, password } = data;
         const result = await userManager.login(username, password, socket.id);
         if (result.success) {
-            socket.emit('loginSuccess', result.user);
+            socket.emit('loginSuccess', { user: result.user, token: result.token });
             // Send room list after login
             socket.emit('roomListUpdate', roomManager.getRooms());
             // Broadcast online users
             io.emit('onlineUsersUpdate', userManager.getOnlineUsers());
         } else {
             socket.emit('loginError', { message: result.error });
+        }
+    });
+
+    socket.on('verifySession', async (token) => {
+        const result = await userManager.verifySession(token, socket.id);
+        if (result.success) {
+            socket.emit('sessionVerified', result.user);
+            socket.emit('roomListUpdate', roomManager.getRooms());
+            io.emit('onlineUsersUpdate', userManager.getOnlineUsers());
+        } else {
+            socket.emit('sessionError', 'Invalid session');
+        }
+    });
+
+    socket.on('logout', (token) => {
+        userManager.logout(token);
+        const user = userManager.disconnect(socket.id);
+        if (user) {
+            io.emit('onlineUsersUpdate', userManager.getOnlineUsers());
         }
     });
 

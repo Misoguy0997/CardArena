@@ -18,7 +18,7 @@ const cards = [
     { id: 206, name: 'Extra Draw', type: 'item', cost: 4, effect: 'draw', value: 2, description: 'Draw 2 more cards immediately', image: 'https://cdn-icons-png.flaticon.com/512/18616/18616159.png' },
 
     // Special Character
-    { id: 102, name: 'OttoS', type: 'character', cost: 6, atk: 3, hp: 10, description: 'This is a spirit from a rhythm game.', ability: 'heal_ally', image: 'https://i.postimg.cc/YqtntMxB/ottospirit-tumyeong.png' },
+    { id: 102, name: 'OttoS', type: 'character', cost: 6, atk: 3, hp: 10, description: 'This is a spirit from a rhythm game. Attacks heal friendly units for 3 HP.', ability: 'heal_ally', image: 'https://i.postimg.cc/YqtntMxB/ottospirit-tumyeong.png' },
 ];
 
 function getCardById(id) {

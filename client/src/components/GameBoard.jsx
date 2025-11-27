@@ -4,7 +4,7 @@ import { PlayerZone } from './PlayerZone';
 import { CenterZone } from './CenterZone';
 import { Sidebar } from './Sidebar';
 
-export const GameBoard = ({ gameState, onPlayCard, onAttack, onEndTurn, onNextPhase }) => {
+export const GameBoard = ({ gameState, onPlayCard, onAttack, onEndTurn, onNextPhase, onSurrender }) => {
     const [hoveredCard, setHoveredCard] = useState(null);
 
     const [attackMode, setAttackMode] = useState(false);
@@ -12,6 +12,8 @@ export const GameBoard = ({ gameState, onPlayCard, onAttack, onEndTurn, onNextPh
 
     const [itemTargetMode, setItemTargetMode] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
+
+    const [showSurrenderModal, setShowSurrenderModal] = useState(false);
 
     if (!gameState || !gameState.players) {
         return (
@@ -93,6 +95,47 @@ export const GameBoard = ({ gameState, onPlayCard, onAttack, onEndTurn, onNextPh
 
             {/* Right: Sidebar */}
             <Sidebar gameLog={gameState.gameLog} hoveredCard={hoveredCard} />
+
+            {/* Surrender Button */}
+            {isMyTurn && (
+                <button
+                    onClick={() => setShowSurrenderModal(true)}
+                    className="absolute top-4 right-80 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-bold shadow-lg z-50 border-2 border-red-400"
+                    title="Surrender Game"
+                >
+                    🏳️ Surrender
+                </button>
+            )}
+
+            {/* Surrender Confirmation Modal */}
+            {showSurrenderModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[100]">
+                    <div className="bg-gray-800 p-8 rounded-2xl border-4 border-red-500 text-center shadow-2xl max-w-md w-full animate-bounce-in">
+                        <h2 className="text-3xl font-bold text-white mb-4">🏳️ Surrender?</h2>
+                        <p className="text-gray-300 mb-8 text-lg">
+                            Are you sure you want to surrender?<br />
+                            You will lose the game immediately.
+                        </p>
+                        <div className="flex justify-center gap-6">
+                            <button
+                                onClick={() => {
+                                    onSurrender();
+                                    setShowSurrenderModal(false);
+                                }}
+                                className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-bold text-lg shadow-lg transform hover:scale-105 transition-all"
+                            >
+                                Yes, Surrender
+                            </button>
+                            <button
+                                onClick={() => setShowSurrenderModal(false)}
+                                className="bg-gray-600 hover:bg-gray-700 text-white px-8 py-3 rounded-lg font-bold text-lg shadow-lg transform hover:scale-105 transition-all"
+                            >
+                                No, Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

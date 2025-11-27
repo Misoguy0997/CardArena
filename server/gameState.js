@@ -262,7 +262,12 @@ class GameState {
             }
 
             if (targetSlot === null) {
-                return { success: false, error: 'Cannot heal player directly' };
+                // Heal Player
+                attacker.hp = Math.min(attacker.hp + 3, attacker.maxHp || 40);
+                this.addLog(`${attackerId}'s ${attackingCard.name} healed Player for 3 HP`);
+
+                attacker.attackedThisTurn.push(attackerSlot);
+                return { success: true };
             }
 
             const targetCard = attacker.field[targetSlot];
